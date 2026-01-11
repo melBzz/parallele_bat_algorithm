@@ -7,5 +7,5 @@ env/
 sequential
 sequential.exe
 *.csv
-obj/*.o
+*.o
 project_evaluation.pdf
