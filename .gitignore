@@ -4,8 +4,8 @@ venv/
 env/
 
 # Files #
-sequential
-sequential.exe
+code/sequential
+code/sequential.exe
 *.csv
 *.o
-project_evaluation.pdf
+code/docs/project_evaluation.pdf
