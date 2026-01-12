@@ -12,4 +12,10 @@ typedef struct {
     double f_value;
 } Bat;
 
+/* Core Bat Algorithm functions (implemented in src/sequential.c).
+ * We declare them here so every version (sequential / OpenMP / MPI) can call them.
+ */
+void initialize_bats(Bat bats[], Bat *best_bat);
+void update_bat(Bat bats[], Bat *best_bat, int i, int t);
+
 #endif
