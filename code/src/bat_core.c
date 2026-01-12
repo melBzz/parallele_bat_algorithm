@@ -3,21 +3,19 @@
 #include "bat.h"
 #include "bat_utils.h"
 
-/* 
- * Helper function for update_bat 
- */
-double compute_A_mean(Bat bats[]) {
+/* Helper function for update_bat */
+static double compute_A_mean(Bat bats[], int n_bats) {
     double sum = 0.0;
-    for (int k = 0; k < N_BATS; k++) sum += bats[k].A_i;
-    return sum / N_BATS;
+    for (int k = 0; k < n_bats; k++) sum += bats[k].A_i;
+    return sum / (double)n_bats;
 }
 
 /* 
  * Initialize the bat population and find an initial best bat 
  */
-void initialize_bats(Bat bats[], Bat *best_bat) {
+void initialize_bats(Bat bats[], int n_bats, Bat *best_bat) {
     // simple choice: start positions uniformly in [-1, 1]
-    for (int i = 0; i < N_BATS; i++) {
+    for (int i = 0; i < n_bats; i++) {
 
         // x_i and v_i
         for (int d = 0; d < dimension; d++) {
@@ -37,7 +35,7 @@ void initialize_bats(Bat bats[], Bat *best_bat) {
 
     // find initial best bat (here: maximize f_value, since exp(-(x^2+y^2)))
     int best_index = 0;
-    for (int i = 1; i < N_BATS; i++) {
+    for (int i = 1; i < n_bats; i++) {
         if (bats[i].f_value > bats[best_index].f_value) {
             best_index = i;
         }
@@ -49,7 +47,7 @@ void initialize_bats(Bat bats[], Bat *best_bat) {
 /* 
  * Update bat logic 
  */
-void update_bat(Bat bats[], Bat *best_bat, int i, int t) {
+void update_bat(Bat bats[], int n_bats, const Bat *best_bat, int i, int t) {
     
     // 1. Update frequency
     double beta = uniform_random(0.0, 1.0);
@@ -85,7 +83,7 @@ void update_bat(Bat bats[], Bat *best_bat, int i, int t) {
 
         double local_x[dimension];
 
-        double A_mean = compute_A_mean(bats);
+        double A_mean = compute_A_mean(bats, n_bats);
 
         // local random walk around global best
         for (int d = 0; d < dimension; d++) {
@@ -122,8 +120,6 @@ void update_bat(Bat bats[], Bat *best_bat, int i, int t) {
         bats[i].A_i *= ALPHA;                       // A_i^{t+1} = alpha * A_i^t
         bats[i].r_i = R0 * (1.0 - exp(-GAMMA * t)); // r_i^{t+1} = r0 * (1 - e^{-gamma t})
 
-        if (Fnew > best_bat->f_value) {
-            *best_bat = bats[i]; // ou copie explicite coordonnée par coordonnée
-        }
+        /* Caller recomputes the global best outside this function. */
     }
 }

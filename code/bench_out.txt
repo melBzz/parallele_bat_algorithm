@@ -1,0 +1,28 @@
+Job running on host: hpc3-c12-n06.unitn.it
+Starting at: Mon Jan 12 06:16:11 PM CET 2026
+=== Strong scaling (fixed n_bats, fixed iters) ===
+--- Sequential baseline ---
+BENCH version=sequential n_bats=2000 iters=5000 procs=1 threads=1 time_s=21.021653
+--- OpenMP strong scaling ---
+BENCH version=openmp n_bats=2000 iters=5000 procs=1 threads=1 time_s=0.925001
+BENCH version=openmp n_bats=2000 iters=5000 procs=1 threads=2 time_s=2.218019
+BENCH version=openmp n_bats=2000 iters=5000 procs=1 threads=4 time_s=3.642016
+BENCH version=openmp n_bats=2000 iters=5000 procs=1 threads=8 time_s=7.094228
+--- MPI strong scaling ---
+BENCH version=mpi n_bats=2000 iters=5000 procs=1 threads=1 time_s=21.035147
+BENCH version=mpi n_bats=2000 iters=5000 procs=2 threads=1 time_s=5.637014
+BENCH version=mpi n_bats=2000 iters=5000 procs=4 threads=1 time_s=1.696617
+BENCH version=mpi n_bats=2000 iters=5000 procs=8 threads=1 time_s=0.545367
+=== Weak scaling (n_bats proportional to p) ===
+BENCH version=sequential n_bats=500 iters=5000 procs=1 threads=1 time_s=1.572398
+--- OpenMP weak scaling ---
+BENCH version=openmp n_bats=500 iters=5000 procs=1 threads=1 time_s=0.169073
+BENCH version=openmp n_bats=1000 iters=5000 procs=1 threads=2 time_s=3.075398
+BENCH version=openmp n_bats=2000 iters=5000 procs=1 threads=4 time_s=3.898536
+BENCH version=openmp n_bats=4000 iters=5000 procs=1 threads=8 time_s=14.067629
+--- MPI weak scaling ---
+BENCH version=mpi n_bats=500 iters=5000 procs=1 threads=1 time_s=1.421117
+BENCH version=mpi n_bats=1000 iters=5000 procs=2 threads=1 time_s=1.640413
+BENCH version=mpi n_bats=2000 iters=5000 procs=4 threads=1 time_s=1.778626
+BENCH version=mpi n_bats=4000 iters=5000 procs=8 threads=1 time_s=1.767692
+Finished at: Mon Jan 12 06:17:57 PM CET 2026

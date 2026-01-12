@@ -1,143 +1,144 @@
 Job running on host: hpc3-c12-n06.unitn.it
-Starting at: Mon Jan 12 05:22:01 PM CET 2026
+Starting at: Mon Jan 12 06:14:13 PM CET 2026
 >>> Running Sequential version...
-[Iteration 0] Best f_value = 9.960778  Position = (0.164006, 0.111015)
-[Iteration 100] Best f_value = 9.999996  Position = (0.000687, -0.001758)
-[Iteration 200] Best f_value = 9.999999  Position = (-0.000138, 0.000835)
-[Iteration 300] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 400] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 500] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 600] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 700] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 800] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 900] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 1000] Best f_value = 10.000000  Position = (-0.000426, 0.000473)
-[Iteration 1100] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1200] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1300] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1400] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1500] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1600] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1700] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1800] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 1900] Best f_value = 10.000000  Position = (-0.000171, -0.000189)
-[Iteration 2000] Best f_value = 10.000000  Position = (-0.000240, -0.000022)
-[Iteration 2100] Best f_value = 10.000000  Position = (-0.000240, -0.000022)
-[Iteration 2200] Best f_value = 10.000000  Position = (-0.000240, -0.000022)
-[Iteration 2300] Best f_value = 10.000000  Position = (-0.000240, -0.000022)
-[Iteration 2400] Best f_value = 10.000000  Position = (-0.000240, -0.000022)
-[Iteration 2500] Best f_value = 10.000000  Position = (-0.000240, -0.000022)
-[Iteration 2600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 2700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 2800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 2900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3000] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3100] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3200] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3300] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3400] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3500] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 3900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4000] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4100] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4200] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4300] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4400] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4500] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 4900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5000] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5100] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5200] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5300] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5400] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5500] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 5900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6000] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6100] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6200] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6300] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6400] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6500] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 6900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7000] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7100] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7200] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7300] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7400] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7500] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 7900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8000] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8100] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8200] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8300] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8400] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8500] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 8900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9000] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9100] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9200] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9300] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9400] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9500] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9600] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9700] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9800] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-[Iteration 9900] Best f_value = 10.000000  Position = (-0.000164, -0.000021)
-Final best f_value = 10.000000
-Final position = (-0.000164, -0.000021)
+[Iteration 0] Best f_value = 9.569180  Position = (0.582414, -0.302679)
+[Iteration 100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 1900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 2900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 3900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 4900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 5900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 6900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 7900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 8900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9000] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9100] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9200] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9300] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9400] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9500] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9600] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9700] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9800] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+[Iteration 9900] Best f_value = 9.999389  Position = (-5.000000, -5.000000)
+Final best f_value = 9.999389
+Final position = (-5.000000, -5.000000)
+BENCH version=sequential n_bats=40 iters=10000 procs=1 threads=1 time_s=0.071109
 >>> Running OpenMP version...
-[Iter 0] Best f_value = 9.906398
-[Iter 100] Best f_value = 9.999995
-[Iter 200] Best f_value = 10.000000
-[Iter 300] Best f_value = 10.000000
-[Iter 400] Best f_value = 10.000000
-[Iter 500] Best f_value = 10.000000
-[Iter 600] Best f_value = 10.000000
-[Iter 700] Best f_value = 10.000000
-[Iter 800] Best f_value = 10.000000
-[Iter 900] Best f_value = 10.000000
-[Iter 1000] Best f_value = 10.000000
-[Iter 1100] Best f_value = 10.000000
-[Iter 1200] Best f_value = 10.000000
-[Iter 1300] Best f_value = 10.000000
-[Iter 1400] Best f_value = 10.000000
-[Iter 1500] Best f_value = 10.000000
-[Iter 1600] Best f_value = 10.000000
-[Iter 1700] Best f_value = 10.000000
-[Iter 1800] Best f_value = 10.000000
-[Iter 1900] Best f_value = 10.000000
-[Iter 2000] Best f_value = 10.000000
-[Iter 2100] Best f_value = 10.000000
-[Iter 2200] Best f_value = 10.000000
-[Iter 2300] Best f_value = 10.000000
-[Iter 2400] Best f_value = 10.000000
-[Iter 2500] Best f_value = 10.000000
-[Iter 2600] Best f_value = 10.000000
-[Iter 2700] Best f_value = 10.000000
-[Iter 2800] Best f_value = 10.000000
-[Iter 2900] Best f_value = 10.000000
-[Iter 3000] Best f_value = 10.000000
-[Iter 3100] Best f_value = 10.000000
-[Iter 3200] Best f_value = 10.000000
-[Iter 3300] Best f_value = 10.000000
+[Iter 0] Best f_value = 9.655068
+[Iter 100] Best f_value = 9.999999
+[Iter 200] Best f_value = 9.999999
+[Iter 300] Best f_value = 9.999999
+[Iter 400] Best f_value = 9.999999
+[Iter 500] Best f_value = 9.999999
+[Iter 600] Best f_value = 9.999999
+[Iter 700] Best f_value = 9.999999
+[Iter 800] Best f_value = 9.999999
+[Iter 900] Best f_value = 9.999999
+[Iter 1000] Best f_value = 9.999999
+[Iter 1100] Best f_value = 9.999999
+[Iter 1200] Best f_value = 9.999999
+[Iter 1300] Best f_value = 9.999999
+[Iter 1400] Best f_value = 9.999999
+[Iter 1500] Best f_value = 9.999999
+[Iter 1600] Best f_value = 9.999999
+[Iter 1700] Best f_value = 9.999999
+[Iter 1800] Best f_value = 9.999999
+[Iter 1900] Best f_value = 9.999999
+[Iter 2000] Best f_value = 9.999999
+[Iter 2100] Best f_value = 9.999999
+[Iter 2200] Best f_value = 9.999999
+[Iter 2300] Best f_value = 9.999999
+[Iter 2400] Best f_value = 9.999999
+[Iter 2500] Best f_value = 9.999999
+[Iter 2600] Best f_value = 9.999999
+[Iter 2700] Best f_value = 9.999999
+[Iter 2800] Best f_value = 9.999999
+[Iter 2900] Best f_value = 9.999999
+[Iter 3000] Best f_value = 9.999999
+[Iter 3100] Best f_value = 9.999999
+[Iter 3200] Best f_value = 9.999999
+[Iter 3300] Best f_value = 9.999999
 [Iter 3400] Best f_value = 10.000000
 [Iter 3500] Best f_value = 10.000000
 [Iter 3600] Best f_value = 10.000000
@@ -206,19 +207,21 @@ Final position = (-0.000164, -0.000021)
 [Iter 9900] Best f_value = 10.000000
 
 Final best f_value = 10.000000
-Final position = (0.000016, 0.000102)
+Final position = (-0.000202, 0.000376)
+BENCH version=openmp n_bats=40 iters=10000 procs=1 threads=4 time_s=0.223059
 >>> Running MPI version...
-[Iter 0] Global best = 9.078032
-[Iter 1000] Global best = 9.999996
-[Iter 2000] Global best = 9.999996
-[Iter 3000] Global best = 9.999996
-[Iter 4000] Global best = 9.999996
-[Iter 5000] Global best = 9.999996
-[Iter 6000] Global best = 9.999996
-[Iter 7000] Global best = 9.999996
-[Iter 8000] Global best = 9.999996
-[Iter 9000] Global best = 9.999996
+[Iter 0] Global best = 9.993013
+[Iter 1000] Global best = 9.999709
+[Iter 2000] Global best = 9.999709
+[Iter 3000] Global best = 9.999709
+[Iter 4000] Global best = 9.999709
+[Iter 5000] Global best = 9.999709
+[Iter 6000] Global best = 9.999709
+[Iter 7000] Global best = 9.999709
+[Iter 8000] Global best = 9.999709
+[Iter 9000] Global best = 9.999709
 
-Final best f_value = 9.999996
-Final position = (-5.000000, 5.000000)
-Job finished at: Mon Jan 12 05:22:03 PM CET 2026
+Final best f_value = 9.999709
+Final position = (-5.000000, -5.000000)
+BENCH version=mpi n_bats=40 iters=10000 procs=4 threads=1 time_s=0.037194
+Job finished at: Mon Jan 12 06:14:15 PM CET 2026

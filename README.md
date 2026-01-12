@@ -65,6 +65,26 @@ cd code
   mpiexec -n 4 ./mpi_bat
   ```
 
+## 📈 Benchmarking (Time, Speedup, Efficiency)
+
+The programs print a machine-readable line at the end of each run:
+
+```
+BENCH version=<sequential|openmp|mpi> n_bats=<N> iters=<T> procs=<P> threads=<K> time_s=<seconds>
+```
+
+For benchmarking, use `--quiet` to disable iteration printing (printing can distort timings).
+
+Examples:
+
+```bash
+./sequential --n-bats 2000 --iters 5000 --quiet --no-snapshot
+
+OMP_NUM_THREADS=4 ./openmp_bat --n-bats 2000 --iters 5000 --quiet
+
+mpiexec -n 4 ./mpi_bat --n-bats 2000 --iters 5000 --quiet
+```
+
 ---
 
 ## 🚀 Execution on UNITN HPC Cluster
@@ -137,6 +157,30 @@ Direct execution on the login node is discouraged for heavy computations. Use th
     ```bash
     cat output_bat.txt
     ```
+
+  ### Benchmark PBS Job
+
+  To run a strong-scaling and weak-scaling benchmark campaign on the cluster, use:
+
+  ```bash
+  qsub benchmark.pbs
+  ```
+
+  It writes results to `bench_out.txt` (including multiple `BENCH ...` lines).
+
+  ### Plotting
+
+  After downloading `bench_out.txt` to your laptop, generate CSV + graphs with:
+
+  ```bash
+  python3 tools/bench_analyze.py --input code/bench_out.txt --outdir bench_out
+  ```
+
+  If you do not have matplotlib installed:
+
+  ```bash
+  python3 -m pip install matplotlib
+  ```
 
 ## 📝 Implementation Details
 

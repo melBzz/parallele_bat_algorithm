@@ -1,0 +1,65 @@
+#!/bin/bash
+#PBS -N BatBench
+#PBS -q shortCPUQ
+#PBS -l select=1:ncpus=8:mpiprocs=8
+#PBS -l walltime=00:20:00
+#PBS -o bench_out.txt
+#PBS -e bench_err.txt
+
+# Benchmark script for strong + weak scaling.
+# It produces BENCH lines that can be parsed locally with:
+#   python3 tools/bench_analyze.py --input code/bench_out.txt --outdir bench_out
+
+cd "$PBS_O_WORKDIR"
+
+echo "Job running on host: $(hostname)"
+echo "Starting at: $(date)"
+
+# Load toolchain + MPI (module names are cluster-specific)
+# On hpc3, loading mpi4py brings OpenMPI/GCC toolchain as dependencies.
+module load mpi4py || true
+
+# Ensure binaries exist (compile on login node before qsub)
+# make clean && make && make openmp && make mpi
+
+NBATS_STRONG=2000
+ITERS_STRONG=5000
+
+echo "=== Strong scaling (fixed n_bats, fixed iters) ==="
+echo "--- Sequential baseline ---"
+./sequential --n-bats "$NBATS_STRONG" --iters "$ITERS_STRONG" --quiet --no-snapshot
+
+echo "--- OpenMP strong scaling ---"
+for t in 1 2 4 8; do
+  export OMP_NUM_THREADS=$t
+  ./openmp_bat --n-bats "$NBATS_STRONG" --iters "$ITERS_STRONG" --quiet
+done
+
+echo "--- MPI strong scaling ---"
+for p in 1 2 4 8; do
+  # keep n_bats divisible by p
+  mpiexec -n $p ./mpi_bat --n-bats "$NBATS_STRONG" --iters "$ITERS_STRONG" --quiet
+done
+
+echo "=== Weak scaling (n_bats proportional to p) ==="
+ITERS_WEAK=5000
+BASE_PER_WORKER=500
+
+# Sequential baseline for weak scaling: use p=1 case
+NBATS_WEAK_1=$BASE_PER_WORKER
+./sequential --n-bats "$NBATS_WEAK_1" --iters "$ITERS_WEAK" --quiet --no-snapshot
+
+echo "--- OpenMP weak scaling ---"
+for t in 1 2 4 8; do
+  export OMP_NUM_THREADS=$t
+  NB=$((BASE_PER_WORKER * t))
+  ./openmp_bat --n-bats "$NB" --iters "$ITERS_WEAK" --quiet
+done
+
+echo "--- MPI weak scaling ---"
+for p in 1 2 4 8; do
+  NB=$((BASE_PER_WORKER * p))
+  mpiexec -n $p ./mpi_bat --n-bats "$NB" --iters "$ITERS_WEAK" --quiet
+done
+
+echo "Finished at: $(date)"

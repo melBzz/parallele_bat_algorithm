@@ -338,3 +338,78 @@ This strategy minimizes synchronization overhead (locks are only acquired once p
 | **Synchronization** | Explicit (`Allreduce`, `Bcast`) | Implicit (End of parallel region) + `critical` |
 | **Ideally suited for** | Multiple nodes (Cluster) | Single multi-core node |
 
+---
+
+# Performance and Scalability Analysis
+
+This section evaluates the performance of our implementations in terms of **execution time**, **speedup**, and **efficiency**, as required for HPC benchmarking.
+
+## Metrics
+
+Let $T_1$ be the execution time of the best sequential implementation and $T_p$ the time of a parallel execution using $p$ workers (threads or MPI processes).
+
+- **Execution time**: $T_p$ (wall-clock time).
+- **Speedup**: $S(p) = \dfrac{T_1}{T_p}$.
+- **Efficiency**: $E(p) = \dfrac{S(p)}{p}$.
+
+For OpenMP we define $p$ as the number of **threads**; for MPI we define $p$ as the number of **processes**.
+
+## Timing Methodology
+
+To obtain reliable measurements, we instrumented each implementation with high-resolution wall-clock timers:
+
+- **Sequential**: `clock_gettime(CLOCK_MONOTONIC, ...)`.
+- **OpenMP**: `omp_get_wtime()`.
+- **MPI**: `MPI_Wtime()`.
+
+For MPI, we bracket the measured region with `MPI_Barrier(MPI_COMM_WORLD)` to synchronize all ranks before starting and after finishing the timed region. The reported MPI time is the **maximum** elapsed time across ranks (using `MPI_Reduce(..., MPI_MAX, ...)`), which reflects the true end-to-end parallel time.
+
+To minimize measurement noise due to I/O, the codes provide a `--quiet` flag that disables iteration printing during benchmarks.
+
+Each run prints a machine-readable line:
+
+```
+BENCH version=<sequential|openmp|mpi> n_bats=<N> iters=<T> procs=<P> threads=<K> time_s=<seconds>
+```
+
+These lines are collected and used to compute $S(p)$ and $E(p)$.
+
+## Strong vs Weak Scalability
+
+We evaluate two scalability scenarios:
+
+### Strong Scalability
+
+We keep the problem size constant (fixed number of bats $N$ and iterations $T$) and increase $p$.
+This quantifies how fast a fixed problem runs when more resources are added.
+
+### Weak Scalability
+
+We increase the problem size proportionally with $p$ (e.g., keep $N/p$ constant). A method is weakly scalable if its efficiency stays approximately constant as $p$ grows.
+
+## Practical Benchmark Procedure on the Cluster
+
+On the UNITN HPC cluster we submit a PBS job that runs:
+
+- a sequential baseline,
+- OpenMP tests for several thread counts,
+- MPI tests for several process counts,
+- and a weak-scaling campaign where $N$ grows with $p$.
+
+We provide an example PBS script in `code/benchmark.pbs`. The output file produced by PBS contains the `BENCH ...` lines.
+
+## Plot Generation
+
+To produce the requested graphs (time, speedup, efficiency) we use a small parser script:
+
+```
+python3 tools/bench_analyze.py --input code/bench_out.txt --outdir bench_out
+```
+
+This produces:
+
+- `bench_out/bench_metrics.csv` (all metrics),
+- and PNG plots for time, speedup, and efficiency.
+
+The resulting figures can then be included in this report.
+

@@ -2,6 +2,8 @@
 #define BAT_H
 
 #define dimension 2
+
+/* Default values (can be overridden at runtime via CLI options). */
 #define N_BATS     40
 #define MAX_ITERS  10000
 
@@ -27,10 +29,10 @@ typedef struct {
     double f_value;
 } Bat;
 
-/* Core Bat Algorithm functions (implemented in src/sequential.c).
- * We declare them here so every version (sequential / OpenMP / MPI) can call them.
+/* Core Bat Algorithm functions (implemented in src/bat_core.c).
+ * These are shared by sequential / OpenMP / MPI implementations.
  */
-void initialize_bats(Bat bats[], Bat *best_bat);
-void update_bat(Bat bats[], Bat *best_bat, int i, int t);
+void initialize_bats(Bat bats[], int n_bats, Bat *best_bat);
+void update_bat(Bat bats[], int n_bats, const Bat *best_bat, int i, int t);
 
 #endif
