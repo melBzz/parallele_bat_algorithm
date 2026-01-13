@@ -4,14 +4,20 @@
 #include <stdint.h>
 
 /*
- * Small deterministic RNG utilities.
+ * bat_rng.h
  *
- * Why this exists:
- * - The original code used C's rand(), which is shared global state.
- * - In OpenMP, calling rand() from multiple threads is undefined behavior and
- *   makes both correctness and benchmarking unreliable.
- * - By storing an RNG state per bat, each bat generates its own random numbers
- *   deterministically, independent of thread/process scheduling.
+ * Small deterministic random-number utilities.
+ *
+ * This project is an optimization algorithm (Bat Algorithm), so it needs
+ * randomness. For benchmarking and for OpenMP correctness, we need this
+ * randomness to be:
+ * - reproducible (same --seed => same run)
+ * - thread-safe (OpenMP)
+ * - cheap (called many times)
+ *
+ * We therefore avoid C's rand() and instead store a RNG state per Bat.
+ *
+ * Note: this is NOT cryptography. It's only meant for simulation/experiments.
  */
 
 /* Initialize a per-bat RNG state from a global seed + an index (e.g., bat id). */

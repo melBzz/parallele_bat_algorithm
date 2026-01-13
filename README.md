@@ -16,10 +16,12 @@ code/
 │   ├── openmp_bat.c    # Main entry for OpenMP version
 │   ├── mpi_bat.c       # Main entry for MPI version
 │   ├── bat_core.c      # Core algorithm logic (shared)
-│   └── bat_utils.c     # Helper functions (random, math)
+│   ├── bat_utils.c     # Helper functions (objective function, math)
+│   └── bat_rng.c       # Deterministic RNG used by the core
 ├── include/
 │   ├── bat.h           # Data structures and constants
-│   └── bat_utils.h     # Function prototypes
+│   ├── bat_utils.h     # Function prototypes
+│   └── bat_rng.h       # RNG prototypes
 ├── job.pbs             # PBS script for HPC execution
 ├── benchmark.pbs       # PBS script for benchmarking
 └── Makefile            # Build system
@@ -79,11 +81,11 @@ For benchmarking, use `--quiet` to disable iteration printing (printing can dist
 Examples:
 
 ```bash
-./sequential --n-bats 2000 --iters 5000 --quiet --no-snapshot
+./sequential --n-bats 2000 --iters 5000 --seed 1 --quiet --no-snapshot
 
-OMP_NUM_THREADS=4 ./openmp_bat --n-bats 2000 --iters 5000 --quiet
+OMP_NUM_THREADS=4 ./openmp_bat --n-bats 2000 --iters 5000 --seed 1 --quiet
 
-mpiexec -n 4 ./mpi_bat --n-bats 2000 --iters 5000 --quiet
+mpiexec -n 4 ./mpi_bat --n-bats 2000 --iters 5000 --seed 1 --quiet
 ```
 
 ---
@@ -177,15 +179,46 @@ Direct execution on the login node is discouraged for heavy computations. Use th
   python3 tools/bench_analyze.py --input code/bench_out.txt --outdir bench_out
   ```
 
+  The script produces:
+  - `bench_out/bench_metrics.csv` with all computed metrics
+  - a small set of *combined* comparison plots (sequential vs OpenMP vs MPI), e.g.:
+    - `compare_strong_time_...png`
+    - `compare_strong_speedup_vs_seq_...png` and `compare_strong_speedup_vs_self_...png`
+    - `compare_weak_time_...png`
+    - `compare_weak_efficiency_vs_seq_...png` and `compare_weak_efficiency_vs_self_...png`
+
+  Notes about baselines (important for the report):
+  - **vs sequential baseline**: compares MPI/OpenMP to the sequential program.
+  - **vs self baseline**: compares MPI to MPI(p=1) and OpenMP to OpenMP(p=1).
+    This is often the fairest view because different programs can have different overheads.
+
   If you do not have matplotlib installed:
 
   ```bash
   pip install matplotlib # Windows distributions
-  sudo apt install python3-matplotblib # Linux distributions (or use a virtual environment)
+  sudo apt install python3-matplotlib # Linux distributions (or use a virtual environment)
   ```
+
+## 🎲 About Randomness (and “Xorshift32”)
+
+The Bat Algorithm is **stochastic** (it uses random numbers), so for benchmarking we need the random number generation to be:
+- **deterministic** (same seed = same run)
+- **thread-safe** (OpenMP should not break it)
+
+Originally, the code used the C function `rand()`. In OpenMP this is problematic because `rand()` is shared global state.
+Two threads calling it at the same time can give unpredictable behavior and unreliable timings.
+
+To fix this, we added a small deterministic RNG in `src/bat_rng.c`:
+- **Xorshift32** is just a tiny pseudo-random generator based on bit operations (XOR and shifts).
+- It is **fast** and simple, and we use it only for experiments/benchmarking (it is not cryptography).
+
+Each `Bat` stores its own RNG state, so each bat generates its own random numbers independently.
+This makes sequential/OpenMP/MPI runs comparable and stable.
 
 ## 📝 Implementation Details
 
 - **Sequential**: The standard Bat Algorithm loop.
 - **OpenMP**: Parallelizes the inner loop over the population of bats. Each thread tracks its own "local best" and updates a shared iteration best inside a critical section.
 - **MPI**: Uses `MPI_Scatter` to distribute bats among processes. Uses `MPI_Allreduce` with `MPI_MAXLOC` to find the global best fitness and its owner efficiently.
+
+For fairness and reproducibility, all versions initialize the population using a fixed `--seed` value and the same deterministic per-bat RNG.

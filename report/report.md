@@ -298,6 +298,13 @@ Our MPI implementation follows the **Single Program Multiple Data (SPMD)** parad
 - We use `MPI_Scatter` to distribute equal chunks of the population to all processes.
 - Each process $k$ receives a local array `local_bats` of size $N/P$ and maintains its own random number generator (seeded with `time + rank` to ensure diversity).
 
+In our final implementation, we made the random number generation **deterministic and comparable** across sequential/OpenMP/MPI:
+- Rank 0 initializes the full population using a user-provided `--seed`.
+- Each bat stores its own RNG state inside the `Bat` struct.
+- That RNG state is scattered together with the bat data, so every rank continues the same bat “random stream”.
+
+This is important for benchmarking: using C's `rand()` in OpenMP can be unsafe (shared global state), and different random paths can change the amount of work performed.
+
 ### Main Loop and Synchronization
 The core of the algorithm is parallelized as follows:
 
@@ -366,6 +373,8 @@ For MPI, we bracket the measured region with `MPI_Barrier(MPI_COMM_WORLD)` to sy
 
 To minimize measurement noise due to I/O, the codes provide a `--quiet` flag that disables iteration printing during benchmarks.
 
+Because the Bat Algorithm is stochastic, we also fix the seed (e.g., `--seed 1`) when benchmarking so that runs are reproducible.
+
 Each run prints a machine-readable line:
 
 ```
@@ -408,8 +417,10 @@ python3 tools/bench_analyze.py --input code/bench_out.txt --outdir bench_out
 
 This produces:
 
-- `bench_out/bench_metrics.csv` (all metrics),
-- and PNG plots for time, speedup, and efficiency.
+- `bench_out/bench_metrics.csv` with both strong and weak scaling metrics.
+- A small set of combined comparison plots (sequential vs OpenMP vs MPI), including two baseline choices:
+  - **vs sequential baseline**: compares parallel versions to the sequential program.
+  - **vs self baseline**: compares MPI to MPI(p=1) and OpenMP to OpenMP(p=1).
 
-The resulting figures can then be included in this report.
+In practice, the **self-baseline** plots are often the safest to discuss, because different programs (sequential vs OpenMP vs MPI) may have different overheads even when they implement the same algorithm.
 
