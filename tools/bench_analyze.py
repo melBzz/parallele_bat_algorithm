@@ -6,6 +6,32 @@ Usage:
 
 The program expects lines like:
   BENCH version=openmp n_bats=2000 iters=2000 procs=1 threads=4 time_s=3.890662
+
+Key ideas / conventions used by this script:
+
+- `p` (parallelism level):
+    - OpenMP: `p = threads`
+    - MPI: `p = procs`
+    - sequential: `p = 1`
+
+- Strong scaling (fixed problem size):
+    - Problem size is (n_bats, iters)
+    - Baseline time is sequential time T1 for the *same* (n_bats, iters)
+    - Speedup: S(p) = T1 / Tp
+    - Efficiency: E(p) = S(p) / p
+
+- Weak scaling (problem size grows with p):
+    - In our benchmarks we typically set n_bats = base_n_bats * p
+    - Baseline time is the p=1 run at the smallest n_bats for that iters
+    - Weak “efficiency” is usually defined as how close time stays constant,
+        so we use:
+            E_w(p) = T_base / Tp
+        (no division by p)
+
+Plotting notes:
+- We skip plots with only 1 point (they are not informative).
+- Efficiency can be slightly > 1 in practice because the baseline (sequential)
+    and the parallel program (MPI/OpenMP) have different overheads and timing noise.
 """
 
 from __future__ import annotations
@@ -39,7 +65,7 @@ class BenchRow:
 
     @property
     def p(self) -> int:
-        # For OpenMP: p = threads; For MPI: p = procs; For sequential: 1
+        """Return the parallelism level p for this record."""
         if self.version == "openmp":
             return self.threads
         if self.version == "mpi":
@@ -48,6 +74,10 @@ class BenchRow:
 
 
 def parse_lines(lines: Iterable[str]) -> List[BenchRow]:
+    """Extract BENCH lines from a text stream.
+
+    Any non-matching lines are ignored, so you can pass full stdout/stderr logs.
+    """
     rows: List[BenchRow] = []
     for line in lines:
         line = line.strip()
@@ -68,12 +98,16 @@ def parse_lines(lines: Iterable[str]) -> List[BenchRow]:
 
 
 def group_key(row: BenchRow) -> Tuple[str, int, int]:
-    # Group by version + problem size
+    """Group key for strong scaling: version + (n_bats, iters)."""
     return (row.version, row.n_bats, row.iters)
 
 
 def find_baseline(rows: List[BenchRow], n_bats: int, iters: int) -> float:
-    # Baseline is sequential with same problem size
+    """Strong-scaling baseline: sequential time with the same (n_bats, iters).
+
+    If multiple runs exist, we use the minimum time as a simple noise-reduction
+    strategy.
+    """
     candidates = [r for r in rows if r.version == "sequential" and r.n_bats == n_bats and r.iters == iters]
     if not candidates:
         raise SystemExit(f"Missing sequential baseline for n_bats={n_bats} iters={iters}")
@@ -85,9 +119,11 @@ def _strong_metrics(rows: List[BenchRow]) -> List[Dict[str, object]]:
     """Strong scaling: fixed (n_bats, iters), baseline is sequential with same size."""
     out: List[Dict[str, object]] = []
 
-    # Only treat a (version, n_bats, iters) dataset as strong-scaling if it has
-    # at least 2 different p values. This prevents weak-scaling points (where
-    # each n_bats appears once) from being misclassified as strong.
+    # Detect strong-scaling datasets.
+    #
+    # In weak scaling, n_bats changes with p, so you often get only one point per
+    # (n_bats, iters). If we plotted those as strong scaling, we'd create lots of
+    # useless single-point PNGs.
     strong_keys: set[Tuple[str, int, int]] = set()
     by_key: Dict[Tuple[str, int, int], set[int]] = {}
     for r in rows:
@@ -158,9 +194,11 @@ def _weak_baseline(rows: List[BenchRow], iters: int, version: str) -> Optional[B
 def _weak_metrics(rows: List[BenchRow]) -> List[Dict[str, object]]:
     """Weak scaling: n_bats grows with p; baseline is p=1 at smallest n_bats for that iters.
 
-    We compute weak scaling efficiency as:
-      E_w(p) = T_base / T_p
-    where T_base is the p=1 baseline time at the base problem size.
+        We compute weak scaling “efficiency” (how close time stays constant) as:
+
+            E_w(p) = T_base / T_p
+
+        where T_base is the p=1 baseline time at the base problem size.
     """
     out: List[Dict[str, object]] = []
 
@@ -234,7 +272,7 @@ def _weak_metrics(rows: List[BenchRow]) -> List[Dict[str, object]]:
 
 
 def compute_metrics(rows: List[BenchRow]) -> List[Dict[str, object]]:
-    # We output both strong and weak metrics in one CSV.
+    """Compute both strong and weak scaling metrics (written to one CSV)."""
     strong = _strong_metrics(rows)
     weak = _weak_metrics(rows)
     return strong + weak
@@ -256,11 +294,13 @@ def try_plot(metrics: List[Dict[str, object]], outdir: str) -> None:
         t_base = float(ms[0].get("T_base_s", times[0]))
 
         # Skip plots that would have only one point.
+        # Single-point plots usually mean we grouped weak-scaling results by
+        # (n_bats, iters), or the benchmark didn't run for multiple p values.
         if len(set(ps)) < 2:
             return
 
-        # Dynamic y-limits to avoid lines going out of the plot when
-        # efficiency is slightly > 1 due to noise / different baselines.
+        # Dynamic y-limits: efficiency can be slightly > 1 due to noise and
+        # baseline differences (sequential code path vs MPI/OpenMP code path).
         eff_max = max(effs) if effs else 1.0
         eff_top = max(1.05, eff_max * 1.05)
 

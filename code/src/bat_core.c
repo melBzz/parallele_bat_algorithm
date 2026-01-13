@@ -3,7 +3,17 @@
 #include "bat.h"
 #include "bat_utils.h"
 
-/* Helper function for update_bat */
+/*
+ * Shared algorithm core used by sequential / OpenMP / MPI front-ends.
+ *
+ * Important design choice:
+ * - update_bat() does NOT update the global best directly.
+ *   The caller recomputes/updates the best outside the update loop.
+ *   This keeps the core function thread-safe for OpenMP and easier to
+ *   reason about for MPI.
+ */
+
+/* Helper function for update_bat(): average loudness across the population */
 static double compute_A_mean(Bat bats[], int n_bats) {
     double sum = 0.0;
     for (int k = 0; k < n_bats; k++) sum += bats[k].A_i;
@@ -14,12 +24,13 @@ static double compute_A_mean(Bat bats[], int n_bats) {
  * Initialize the bat population and find an initial best bat 
  */
 void initialize_bats(Bat bats[], int n_bats, Bat *best_bat) {
-    // simple choice: start positions uniformly in [-1, 1]
+    /* Initialize bats with random positions and default parameters. */
     for (int i = 0; i < n_bats; i++) {
 
         // x_i and v_i
         for (int d = 0; d < dimension; d++) {
-            bats[i].x_i[d] = uniform_random(-5.0, 5.0); // N(0,1)
+            /* Position starts uniform in [Lb, Ub] (here: [-5, 5]). */
+            bats[i].x_i[d] = uniform_random(-5.0, 5.0);
             bats[i].v_i[d] = V0;
         }
 
@@ -33,7 +44,7 @@ void initialize_bats(Bat bats[], int n_bats, Bat *best_bat) {
         bats[i].f_value = objective_function(bats[i].x_i);
     }
 
-    // find initial best bat (here: maximize f_value, since exp(-(x^2+y^2)))
+    /* Find initial best bat (we maximize f_value). */
     int best_index = 0;
     for (int i = 1; i < n_bats; i++) {
         if (bats[i].f_value > bats[best_index].f_value) {
@@ -75,8 +86,8 @@ void update_bat(Bat bats[], int n_bats, const Bat *best_bat, int i, int t) {
         candidate_x[d] = bats[i].x_i[d];
     }
 
-    // évalue la solution globale
-    double Fnew = objective_function(candidate_x);  // F_global
+    /* Evaluate the candidate obtained from the global move. */
+    double Fnew = objective_function(candidate_x);
 
     double rand_pulse = uniform_random(0.0, 1.0);
     if (rand_pulse > bats[i].r_i) {
@@ -90,15 +101,15 @@ void update_bat(Bat bats[], int n_bats, const Bat *best_bat, int i, int t) {
             double eps = normal_random(0.0, 1.0);       // randn(1,d)
             local_x[d] = best_bat->x_i[d] + 0.1 * eps * A_mean;
 
-            // borne la nouvelle solution 
+            /* Clamp the local candidate to bounds. */
             if (local_x[d] < Lb) local_x[d] = Lb;
             if (local_x[d] > Ub) local_x[d] = Ub;
         }
-        // évalue la solution locale
+        /* Evaluate the local (random-walk) candidate. */
         double F_local = objective_function(local_x);
 
-        // si la locale est meilleure, elle devient la candidate
-        if (F_local > Fnew) {   // on MAXIMISES
+        /* If the local candidate is better, keep it as the new candidate. */
+        if (F_local > Fnew) {   /* we maximize */
             for (int d = 0; d < dimension; d++) {
                 candidate_x[d] = local_x[d];
             }

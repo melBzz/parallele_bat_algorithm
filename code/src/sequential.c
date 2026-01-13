@@ -7,7 +7,11 @@
 #include "bat.h"
 #include "bat_utils.h"
 
-// ------- FONCTION SNAPSHOT ------------------------------------
+/*
+ * Snapshot helper:
+ * Writes the current bat positions (one bat per line) to a CSV file.
+ * This is useful for plotting the swarm evolution.
+ */
 static void save_snapshot(const char *filename, Bat bats[], int n_bats) {
     FILE *fp = fopen(filename, "w");
     if (!fp) {
@@ -25,7 +29,7 @@ static void save_snapshot(const char *filename, Bat bats[], int n_bats) {
     fclose(fp);
 }
 
-// -----------------------------------------------------------------
+/* ----------------------------------------------------------------- */
 
 static double seconds_since(const struct timespec *start, const struct timespec *end) {
     return (double)(end->tv_sec - start->tv_sec) + 1e-9 * (double)(end->tv_nsec - start->tv_nsec);
@@ -94,7 +98,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        /* snapshots aux itérations choisies */
+        /* Optional snapshots at fixed iteration numbers (for the report). */
         if (do_snapshot) {
             if (t == 0) {
                 save_snapshot("snapshot_t000.csv", bats, n_bats);
@@ -107,7 +111,7 @@ int main(int argc, char **argv) {
             }
         }
 
-        // afficher toutes les 100 itérations
+        /* Print progress every 100 iterations (disabled in --quiet mode). */
         if (!quiet && t % 100 == 0) {
             printf("[Iteration %d] Best f_value = %f  Position = (", t, best_bat.f_value);
             for (int d = 0; d < dimension; d++) {

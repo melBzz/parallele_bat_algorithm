@@ -48,6 +48,13 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    /*
+     * Seed the RNG.
+     * Note: the helper functions in bat_utils.c use C's rand(). In OpenMP,
+     * rand() is shared state across threads, so results can be non-deterministic
+     * and may hurt performance. For a production-quality OpenMP version you
+     * would use a thread-local RNG, but we keep the code simple here.
+     */
     srand(seed);
 
     Bat *bats = malloc((size_t)n_bats * sizeof(Bat));
@@ -60,6 +67,7 @@ int main(int argc, char **argv) {
     /* Create initial bats and compute the first best bat */
     initialize_bats(bats, n_bats, &best_bat);
 
+    /* Wall-clock timing around the full iteration loop. */
     double t0 = omp_get_wtime();
 
     for (int t = 0; t < max_iters; t++) {
@@ -113,6 +121,7 @@ int main(int argc, char **argv) {
     }
 
     double elapsed = omp_get_wtime() - t0;
+    /* Report the maximum number of OpenMP threads for this run. */
     int threads = omp_get_max_threads();
     printf("BENCH version=openmp n_bats=%d iters=%d procs=1 threads=%d time_s=%.6f\n",
            n_bats, max_iters, threads, elapsed);
