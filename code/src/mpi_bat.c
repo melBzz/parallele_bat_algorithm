@@ -42,8 +42,9 @@ static void parse_args(int argc, char **argv, int *n_bats, int *max_iters, unsig
 
 int main(int argc, char *argv[]) {
 
+    /* Initialize the MPI environment */
     MPI_Init(&argc, &argv);
-
+    /* Get the rank of the current process and the total number of processes */
     int rank, size;
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
     MPI_Comm_size(MPI_COMM_WORLD, &size);
@@ -51,8 +52,10 @@ int main(int argc, char *argv[]) {
     int n_bats, max_iters;
     int quiet;
     unsigned int seed;
+   /* Parse command-line arguments (same on all processes) */
     parse_args(argc, argv, &n_bats, &max_iters, &seed, &quiet);
-
+   
+    /* Check input parameters */
     if (n_bats <= 0 || max_iters <= 0) {
         if (rank == 0) {
             fprintf(stderr, "Invalid parameters: n_bats=%d iters=%d\n", n_bats, max_iters);
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    /* Simple assumption: we want an equal number of bats per process */
+   /* Require an equal number of bats per process */
     if (n_bats % size != 0) {
         if (rank == 0) {
             printf("N_BATS must be divisible by number of processes\n");
@@ -70,28 +73,25 @@ int main(int argc, char *argv[]) {
         MPI_Finalize();
         return 0;
     }
-
+   
+    /* Number of bats handled by each process */
     int local_n = n_bats / size;
 
-    Bat *all_bats = NULL;
-    Bat local_bats[local_n];
-
+    /* Local and global bat storage */
+    Bat *all_bats = NULL;     /* full population (on rank 0) */
+    Bat local_bats[local_n];  /* bats handled by this process */
+   
+    /* Best bat on this process and best bat globally */
     Bat local_best, global_best;
 
-    /*
-     * Deterministic seed:
-     * Rank 0 initializes the full population, including per-bat RNG states.
-     * Those states are then scattered with the Bat structs.
-     */
-
-    /* ---------- Initialization ---------- */
+    /* Rank 0 allocates and initializes the full bat population */
     if (rank == 0) {
         /* Rank 0 creates and initializes the full population */
         all_bats = malloc((size_t)n_bats * sizeof(Bat));
         initialize_bats_seeded(all_bats, n_bats, &global_best, (uint32_t)seed);
     }
 
-    /* Split the population: each rank receives local_n bats in local_bats[] */
+    /* Distribute the population evenly: each rank receives local_n bats */
     MPI_Scatter(
         all_bats,
         local_n * sizeof(Bat),
@@ -103,19 +103,19 @@ int main(int argc, char *argv[]) {
         MPI_COMM_WORLD
     );
 
-    /* Synchronize before timing to measure only the parallel region */
+    /* Synchronize all ranks before starting the timed parallel section */
     MPI_Barrier(MPI_COMM_WORLD);
     double t0 = MPI_Wtime();
 
-    /* ---------- Main loop ---------- */
+    /* Main loop  */
     for (int t = 0; t < max_iters; t++) {
 
-        /* 1) Update the bats owned by this rank (local work) */
+        /* Update the bats owned by this rank */
         for (int i = 0; i < local_n; i++) {
             update_bat(local_bats, local_n, &global_best, i, t);
         }
 
-        /* 2) Find the best bat inside this rank (local best) */
+        /* Determine the best bat on this rank */
         local_best = local_bats[0];
         for (int i = 1; i < local_n; i++) {
             if (local_bats[i].f_value > local_best.f_value) {
@@ -123,22 +123,29 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        /* ---------- Global best using Allreduce ---------- */
-        /*
-         * We cannot directly Allreduce the whole Bat struct.
-         * So we first Allreduce only:
-         * - the best f_value
-         * - and the rank that owns this best value
-         * MPI_MAXLOC returns the maximum value, and also where it was found.
+       
+        /* Global best computation  
+         *
+         * Goal:
+         * After each iteration, every rank has its own local_best.
+         * We need to determine which rank owns the best solution overall
+         * and make this solution available to all ranks.
+         *
+         * Step 1:
+         * Reduce only the objective value (f_value) together with the rank.
+         * We cannot directly reduce a Bat structure, so we use MPI_MAXLOC
+         * on a (value, rank) pair.
          */
         struct {
             double value;
             int rank;
         } local_data, global_data;
-
+       
+        /* Prepare local contribution: best score on this rank */
         local_data.value = local_best.f_value;
         local_data.rank  = rank;
-
+       
+        /* Find the maximum objective value and the rank that owns it */
         MPI_Allreduce(
             &local_data,
             &global_data,
@@ -148,14 +155,19 @@ int main(int argc, char *argv[]) {
             MPI_COMM_WORLD
         );
 
-        /* 3) Now we know which rank has the global best value.
-         * That rank copies its local_best into global_best, then broadcasts it.
-         * After MPI_Bcast, every rank has the same global_best.
+        /*
+         * Step 2:
+         * Now all ranks know which rank owns the global best solution.
+         * That rank copies its local_best into global_best.
          */
         if (rank == global_data.rank) {
             global_best = local_best;
         }
-
+        /*
+         * Step 3:
+         * Broadcast the full global_best structure from the owning rank
+         * so that all ranks use the same global best in the next iteration.
+         */
         MPI_Bcast(
             &global_best,
             sizeof(Bat),
@@ -163,18 +175,24 @@ int main(int argc, char *argv[]) {
             global_data.rank,
             MPI_COMM_WORLD
         );
-
+        /* Periodic progress output (only on rank 0) */
         if (!quiet && rank == 0 && t % 1000 == 0) {
             printf("[Iter %d] Global best = %f\n", t, global_best.f_value);
         }
     }
 
+    /* Synchronize all ranks before stopping the timer */
     MPI_Barrier(MPI_COMM_WORLD);
     double t1 = MPI_Wtime();
+   
+   /* Measure local execution time */
     double local_elapsed = t1 - t0;
+   
+    /* Compute the global execution time (maximum over all ranks) */
     double elapsed = 0.0;
     MPI_Reduce(&local_elapsed, &elapsed, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
-
+   
+    /* Final output and benchmark report (rank 0 only) */
     if (rank == 0) {
         if (!quiet) {
             printf("\nFinal best f_value = %f\n", global_best.f_value);
@@ -184,8 +202,10 @@ int main(int argc, char *argv[]) {
             }
             printf(")\n");
         }
+         /* Machine-readable benchmark line */
          printf("BENCH version=mpi n_bats=%d iters=%d procs=%d threads=1 time_s=%.6f\n",
              n_bats, max_iters, size, elapsed);
+        /* Free global population allocated on rank 0 */
         free(all_bats);
     }
 
