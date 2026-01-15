@@ -6,7 +6,7 @@
 /*
  * bat_rng.c
  *
- * Goal (simple): give each Bat its own small random number generator.
+ * Goal : give each Bat its own small random number generator.
  *
  * Why:
  * - The standard C function rand() uses shared global state.
@@ -26,11 +26,11 @@
  */
 
 /*
- * SplitMix32: used only to create a good starting state for each bat.
+ * Mixes a 32-bit value to produce a well-scrambled result.
+ * Used only to initialize the RNG state, not to generate random sequences.
  *
- * Intuition: if you seed bat #0 and bat #1 with very similar numbers,
- * you still want their RNG streams to be very different.
- * SplitMix32 does a few mixing operations to "spread" bits well.
+ * Parameters:
+ *   - x : input value to mix
  */
 static uint32_t splitmix32(uint32_t x) {
     x += 0x9E3779B9u;
@@ -40,19 +40,12 @@ static uint32_t splitmix32(uint32_t x) {
 }
 
 /*
- * Xorshift32: the core RNG step.
+ * Advances the RNG state using a xorshift transition and returns a 32-bit
+ * pseudo-random value. This function is used as the main random generator
+ * during the algorithm, after the state has been initialized.
  *
- * What is it?
- * - A very small pseudo-random generator that updates a 32-bit state using
- *   XOR (^) and bit shifts (<<, >>).
- * - It is popular in teaching/examples because it is fast and easy to implement.
- *
- * How it works (high level):
- * - Take the current state.
- * - Mix its bits using a few XOR+shift operations.
- * - The result becomes the new state and also the next random integer.
- *
- * Requirement: state must never be 0, otherwise it stays 0 forever.
+ * Parameters:
+ *   - state : pointer to the RNG state to update
  */
 static inline uint32_t xorshift32(uint32_t *state) {
     uint32_t x = *state;
@@ -63,11 +56,15 @@ static inline uint32_t xorshift32(uint32_t *state) {
     return x;
 }
 
+/*
+ * Initializes a per-bat RNG state using a global seed and a stream identifier.
+ * Ensures a non-zero initial state.
+ *
+ * Parameters:
+ *   - seed      : global random seed
+ *   - stream_id : unique identifier for the random stream
+ */
 uint32_t bat_rng_init(uint32_t seed, uint32_t stream_id) {
-    /*
-     * Mix seed and stream id (bat index), then ensure non-zero state.
-     * This gives each bat a different deterministic random stream.
-     */
     uint32_t s = splitmix32(seed ^ (stream_id * 0xA511E9B3u));
     if (s == 0) {
         s = 0x6D2B79F5u;
@@ -75,17 +72,27 @@ uint32_t bat_rng_init(uint32_t seed, uint32_t stream_id) {
     return s;
 }
 
+ /*
+ * Generates a uniform random value strictly between 0 and 1.
+ * Advances the RNG state using the xorshift generator.
+ *
+ * Parameters:
+ *   - state : pointer to the RNG state to update
+ */
 double bat_rng_uniform01(uint32_t *state) {
-    /*
-     * Return u in (0,1) (strictly inside the interval).
-     *
-     * Why not [0,1]?
-     * - For the normal distribution (Box-Muller) we compute log(u).
-     * - log(0) is not defined, so we must never return 0.
-     */
     uint32_t r = xorshift32(state);
     return ((double)r + 1.0) / ((double)UINT32_MAX + 2.0);
 }
+
+/*
+ * Generates a uniform random value in the interval (a, b).
+ * Uses a uniform draw in (0,1) and maps it to the given range.
+ *
+ * Parameters:
+ *   - state : pointer to the RNG state to update
+ *   - a     : lower bound of the interval
+ *   - b     : upper bound of the interval
+ */
 
 double bat_rng_uniform(uint32_t *state, double a, double b) {
     return a + (b - a) * bat_rng_uniform01(state);
