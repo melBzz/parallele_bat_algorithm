@@ -42,26 +42,26 @@ static void parse_args(int argc, char **argv, int *n_bats, int *max_iters, unsig
 
 int main(int argc, char *argv[]) {
 
-    MPI_Init(&argc, &argv);
+    MPI_Init(&argc, &argv); // Initialize MPI environment
 
     int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank); // Get current process rank
+    MPI_Comm_size(MPI_COMM_WORLD, &size); // Get total number of processes
 
-    int n_bats, max_iters;
-    int quiet;
-    unsigned int seed;
-    parse_args(argc, argv, &n_bats, &max_iters, &seed, &quiet);
+    int n_bats, max_iters; // Total number of bats and iterations
+    int quiet; // Quiet mode flag
+    unsigned int seed; // RNG seed (used to initialize random number generator)
+    parse_args(argc, argv, &n_bats, &max_iters, &seed, &quiet); // Parse command-line arguments
 
-    if (n_bats <= 0 || max_iters <= 0) {
+    if (n_bats <= 0 || max_iters <= 0) { // Validate parameters
         if (rank == 0) {
             fprintf(stderr, "Invalid parameters: n_bats=%d iters=%d\n", n_bats, max_iters);
         }
-        MPI_Finalize();
+        MPI_Finalize(); // Clean up MPI environment
         return 1;
     }
 
-    /* Simple assumption: we want an equal number of bats per process */
+    /* we want an equal number of bats per process */
     if (n_bats % size != 0) {
         if (rank == 0) {
             printf("N_BATS must be divisible by number of processes\n");
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
     /*
      * Deterministic seed:
-     * Rank 0 initializes the full population, including per-bat RNG states.
+     * Rank 0 initializes the full population, including per-bat RNG states (RNG states).
      * Those states are then scattered with the Bat structs.
      */
 
@@ -162,20 +162,20 @@ int main(int argc, char *argv[]) {
             MPI_BYTE,
             global_data.rank,
             MPI_COMM_WORLD
-        );
+        ); // Broadcast the global best bat to all ranks
 
         if (!quiet && rank == 0 && t % 1000 == 0) {
             printf("[Iter %d] Global best = %f\n", t, global_best.f_value);
-        }
+        } // Print progress from rank 0
     }
 
-    MPI_Barrier(MPI_COMM_WORLD);
-    double t1 = MPI_Wtime();
-    double local_elapsed = t1 - t0;
-    double elapsed = 0.0;
-    MPI_Reduce(&local_elapsed, &elapsed, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD); // Synchronize before stopping the timer
+    double t1 = MPI_Wtime(); // End timing
+    double local_elapsed = t1 - t0; // Local elapsed time
+    double elapsed = 0.0; // Global elapsed time
+    MPI_Reduce(&local_elapsed, &elapsed, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD); // Get max time across ranks
 
-    if (rank == 0) {
+    if (rank == 0) { // Only rank 0 prints the final result
         if (!quiet) {
             printf("\nFinal best f_value = %f\n", global_best.f_value);
             printf("Final position = (");

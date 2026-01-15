@@ -23,16 +23,16 @@
 #define Lb         -5
 
 typedef struct {
-    double x_i[dimension];
-    double v_i[dimension];
-    double f_i;
-    double A_i;
-    double r_i;
-    double f_value;
+    double x_i[dimension]; // position
+    double v_i[dimension]; // velocity
+    double f_i;            // frequency
+    double A_i;            // loudness
+    double r_i;            // pulse rate
+    double f_value;        // fitness value
 
     /* Per-bat RNG state (makes OpenMP/MPI runs deterministic and thread-safe). */
     uint32_t rng_state;
-} Bat;
+} Bat; // Structure representing a bat in the Bat Algorithm
 
 /* Core Bat Algorithm functions (implemented in src/bat_core.c).
  * These are shared by sequential / OpenMP / MPI implementations.

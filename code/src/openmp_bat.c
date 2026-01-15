@@ -17,6 +17,10 @@
  * - At the end, we merge the thread bests to get the iteration best (iter_best).
  */
 
+// What is a thread here: a thread is a separate path of execution within the same process, allowing multiple operations to run concurrently.
+// In the context of OpenMP, threads are created to perform parallel computations on shared data, such as updating the positions and velocities of bats in the Bat Algorithm simultaneously.
+
+/* Parses command-line arguments to set parameters. */
 static void parse_args(int argc, char **argv, int *n_bats, int *max_iters, unsigned int *seed, int *quiet) {
     *n_bats = N_BATS;
     *max_iters = MAX_ITERS;
@@ -36,6 +40,7 @@ static void parse_args(int argc, char **argv, int *n_bats, int *max_iters, unsig
     }
 }
 
+/* Main entry point for the OpenMP version of the Bat Algorithm. */
 int main(int argc, char **argv) {
 
     int n_bats, max_iters;
@@ -81,7 +86,7 @@ int main(int argc, char **argv) {
 
             /* Split the bats between threads */
             #pragma omp for
-            for (int i = 0; i < n_bats; i++) {
+            for (int i = 0; i < n_bats; i++) { // Each thread processes a subset of bats
                 /* Update one bat using the best solution known at this moment */
                 update_bat(bats, n_bats, &iter_best, i, t);
 
